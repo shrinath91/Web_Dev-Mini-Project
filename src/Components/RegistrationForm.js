@@ -1,7 +1,9 @@
 import { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from '../loggedSlice'
+import { login } from '../loggedSlice';
+import background from '../Components/Event.avif'
+import './Style.css'
 
 export default function RegistrationForm() {
 
@@ -53,9 +55,17 @@ export default function RegistrationForm() {
     }
     fetch("http://localhost:9000/register", reqOptions)
     .then(resp => resp.text())
-    .then(data => setInsertMsg(data) )
-        
-        navigate('/login')
+    .then(data => {
+        if (data==='true') {
+            // Redirect or perform other actions for successful login
+            alert('Registration Successful');
+              navigate("/login")
+          } 
+          else {
+            // Handle unsuccessful login
+            alert('User already exists');
+          }
+        })
     }
     
 
@@ -69,7 +79,7 @@ export default function RegistrationForm() {
                if(!pattern.test(val))
                {
                   valid = false;
-                  error = "username shoud of form 'Arya Bhangale'"
+                  error = "Username shoud of form 'Firstname Lastname'"
                }
 
                break;
@@ -78,7 +88,7 @@ export default function RegistrationForm() {
                 if(!pattern.test(val))
                 {
                     valid = false;
-                    error = "password should be greater than 8 characters"
+                    error = "Password should be between 8-15 characters"
                 }
                 break;
             case 'contact':
@@ -86,7 +96,7 @@ export default function RegistrationForm() {
                if(!pattern.test(val))
                {
                   valid = false;
-                  error = "contact no should be 10 digits only"
+                  error = "Contact no should be 10 digits only"
                }
 
                break;
@@ -95,7 +105,7 @@ export default function RegistrationForm() {
                if(!pattern.test(val))
                {
                   valid = false;
-                  error = "invalid email"
+                  error = "Invalid email"
                }
 
                break;
@@ -127,41 +137,46 @@ export default function RegistrationForm() {
 
 
     return (
-        <div>
-            <h1> Registration Form </h1>
-            <form>
-                Username : <input type="text" name="user_name" 
+        <div className="container d-flex justify-content-center " >
+            {/* backgroundImage: `url(${background})` */}
+            
+        <div className="shadow-lg p-4 m-5 background" style={{"width": '50rem'}}>
+
+            <h1 className="d-flex justify-content-center text-success mb-3">Registration Form !</h1>
+            
+            <form >
+               <span> Username : </span><input type="text" name="user_name" 
                 value={user.user_name.value}
                 onChange={(e)=>{handleChange("user_name",e.target.value)}} 
-                onBlur={(e)=>{handleChange("user_name",e.target.value)}} />
+                onBlur={(e)=>{handleChange("user_name",e.target.value)}} className="form-control" required placeholder="Enter username"/>
                 <br/>
                 <div style={{ display: user.user_name.touched && !user.user_name.valid  ?"block":"none", color:"red"}}>
                     { user.user_name.error}
                 </div>
 
 
-                Password : <input type="password" name="password" 
+                <span> Password : </span> <input type="password" name="password" 
                 value={user.password.value}
                 onChange={(e)=>{handleChange("password",e.target.value)}} 
-                onBlur={(e)=>{handleChange("password",e.target.value)}} />
+                onBlur={(e)=>{handleChange("password",e.target.value)}} className="form-control" placeholder="Enter Password" required/>
                 <br/>
                 <div style={{ display: user.password.touched && !user.password.valid  ?"block":"none",color:"red"}}>
                     { user.password.error}
                 </div>
 
-                Contact : <input type="contact" name="contact" 
+                <span> Contact : </span> <input type="contact" name="contact" 
                 value={user.contact.value}
                 onChange={(e)=>{handleChange("contact",e.target.value)}} 
-                onBlur={(e)=>{handleChange("contact",e.target.value)}} />
+                onBlur={(e)=>{handleChange("contact",e.target.value)}} className="form-control" placeholder="Enter Mobile no" required/>
                 <br/>
                 <div style={{ display: user.contact.touched && !user.contact.valid  ?"block":"none",color:"red"}}>
                     { user.contact.error}
                 </div>
 
-                Email : <input type="email" name="email" 
+                <span> Email :</span>  <input type="email" name="email" 
                 value={user.email.value}
                 onChange={(e)=>{handleChange("email",e.target.value)}} 
-                onBlur={(e)=>{handleChange("email",e.target.value)}} />
+                onBlur={(e)=>{handleChange("email",e.target.value)}}className="form-control" placeholder="Enter email"required/>
                 <br/>
                 <div style={{ display: user.email.touched && !user.email.valid  ?"block":"none",color:"red"}}>
                     { user.email.error}
@@ -169,16 +184,15 @@ export default function RegistrationForm() {
 
                 <input type="submit" value="Insert"
                 disabled={!user.formValid} 
-                onClick={(e)=>{submitData(e)}} />
-
+                onClick={(e)=>{submitData(e)}}className="form-control"style={{opacity:"0.8"}}/>
+                <br/>
                 <input type="reset" value="Clear" 
-                onClick={()=>{dispatch({type:"reset"})}}/>
+                onClick={()=>{dispatch({type:"reset"})}}className="form-control btn btn-primary" style={{opacity:"0.8"}}/>
             </form>
-            <p> {JSON.stringify(user)} </p>
-
-            
+            </div>
         </div>
     )
+
 
 
 
